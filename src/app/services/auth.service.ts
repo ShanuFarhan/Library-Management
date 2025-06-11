@@ -14,7 +14,10 @@ export class AuthService {
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   // Mock users database
-  private users: User[] = [
+  private users: User[] = [];
+
+  // Default users for initial setup
+  private defaultUsers: User[] = [
     {
       id: '1',
       fullName: 'Admin User',
@@ -42,8 +45,47 @@ export class AuthService {
   ];
 
   constructor() {
+    // Load users from localStorage or use defaults
+    this.loadUsersFromStorage();
     // Check if user is already logged in (from localStorage)
     this.loadUserFromStorage();
+  }
+
+  private loadUsersFromStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      const usersData = localStorage.getItem('library_users');
+      if (usersData) {
+        try {
+          const parsedUsers = JSON.parse(usersData);
+          // Convert date strings back to Date objects
+          this.users = parsedUsers.map((user: any) => ({
+            ...user,
+            createdAt: new Date(user.createdAt),
+            updatedAt: new Date(user.updatedAt)
+          }));
+        } catch (error) {
+          console.error('Error parsing users from localStorage:', error);
+          this.users = [...this.defaultUsers];
+          this.saveUsersToStorage();
+        }
+      } else {
+        // First time setup - use default users
+        this.users = [...this.defaultUsers];
+        this.saveUsersToStorage();
+      }
+    } else {
+      this.users = [...this.defaultUsers];
+    }
+  }
+
+  private saveUsersToStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('library_users', JSON.stringify(this.users));
+      } catch (error) {
+        console.error('Error saving users to localStorage:', error);
+      }
+    }
   }
 
   private loadUserFromStorage(): void {
@@ -132,6 +174,7 @@ export class AuthService {
         };
 
         this.users.push(newUser);
+        this.saveUsersToStorage(); // Persist to localStorage
 
         // Auto-login after registration
         const userWithoutPassword = { ...newUser };
@@ -199,6 +242,7 @@ export class AuthService {
         const userIndex = this.users.findIndex(u => u.id === userId);
         if (userIndex !== -1) {
           this.users[userIndex] = { ...this.users[userIndex], ...updates, updatedAt: new Date() };
+          this.saveUsersToStorage(); // Persist to localStorage
           return true;
         }
         return false;

@@ -20,7 +20,10 @@ export class TransactionService {
   public transactions$ = this.transactionsSubject.asObservable();
 
   // Mock transactions database
-  private transactions: Transaction[] = [
+  private transactions: Transaction[] = [];
+
+  // Default transactions for initial setup
+  private defaultTransactions: Transaction[] = [
     {
       id: '1',
       userId: '2',
@@ -47,7 +50,47 @@ export class TransactionService {
     private bookService: BookService,
     private authService: AuthService
   ) {
+    // Load transactions from localStorage or use defaults
+    this.loadTransactionsFromStorage();
     this.transactionsSubject.next(this.transactions);
+  }
+
+  private loadTransactionsFromStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      const transactionsData = localStorage.getItem('library_transactions');
+      if (transactionsData) {
+        try {
+          const parsedTransactions = JSON.parse(transactionsData);
+          // Convert date strings back to Date objects
+          this.transactions = parsedTransactions.map((transaction: any) => ({
+            ...transaction,
+            borrowDate: new Date(transaction.borrowDate),
+            dueDate: new Date(transaction.dueDate),
+            returnDate: transaction.returnDate ? new Date(transaction.returnDate) : undefined
+          }));
+        } catch (error) {
+          console.error('Error parsing transactions from localStorage:', error);
+          this.transactions = [...this.defaultTransactions];
+          this.saveTransactionsToStorage();
+        }
+      } else {
+        // First time setup - use default transactions
+        this.transactions = [...this.defaultTransactions];
+        this.saveTransactionsToStorage();
+      }
+    } else {
+      this.transactions = [...this.defaultTransactions];
+    }
+  }
+
+  private saveTransactionsToStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('library_transactions', JSON.stringify(this.transactions));
+      } catch (error) {
+        console.error('Error saving transactions to localStorage:', error);
+      }
+    }
   }
 
   // Borrow a book
@@ -88,6 +131,7 @@ export class TransactionService {
         };
 
         this.transactions.push(newTransaction);
+        this.saveTransactionsToStorage(); // Persist to localStorage
         this.transactionsSubject.next(this.transactions);
 
         // Update book availability
@@ -130,6 +174,7 @@ export class TransactionService {
         transaction.fine = fine;
         transaction.notes = request.notes;
 
+        this.saveTransactionsToStorage(); // Persist to localStorage
         this.transactionsSubject.next(this.transactions);
 
         // Update book availability

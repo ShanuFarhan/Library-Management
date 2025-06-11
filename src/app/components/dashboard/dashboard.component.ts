@@ -190,6 +190,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/users']);
   }
 
+  navigateToDataManagement(): void {
+    this.router.navigate(['/admin/data']);
+  }
+
   navigateToBorrowed(): void {
     this.router.navigate(['/user/borrowed']);
   }

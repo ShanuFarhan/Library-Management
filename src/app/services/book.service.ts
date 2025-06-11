@@ -11,7 +11,10 @@ export class BookService {
   public books$ = this.booksSubject.asObservable();
 
   // Mock books database
-  private books: Book[] = [
+  private books: Book[] = [];
+
+  // Default books for initial setup
+  private defaultBooks: Book[] = [
     {
       id: '1',
       title: 'The Great Gatsby',
@@ -85,7 +88,47 @@ export class BookService {
   ];
 
   constructor() {
+    // Load books from localStorage or use defaults
+    this.loadBooksFromStorage();
     this.booksSubject.next(this.books);
+  }
+
+  private loadBooksFromStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      const booksData = localStorage.getItem('library_books');
+      if (booksData) {
+        try {
+          const parsedBooks = JSON.parse(booksData);
+          // Convert date strings back to Date objects
+          this.books = parsedBooks.map((book: any) => ({
+            ...book,
+            publishedDate: new Date(book.publishedDate),
+            addedDate: new Date(book.addedDate),
+            updatedDate: new Date(book.updatedDate)
+          }));
+        } catch (error) {
+          console.error('Error parsing books from localStorage:', error);
+          this.books = [...this.defaultBooks];
+          this.saveBooksToStorage();
+        }
+      } else {
+        // First time setup - use default books
+        this.books = [...this.defaultBooks];
+        this.saveBooksToStorage();
+      }
+    } else {
+      this.books = [...this.defaultBooks];
+    }
+  }
+
+  private saveBooksToStorage(): void {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('library_books', JSON.stringify(this.books));
+      } catch (error) {
+        console.error('Error saving books to localStorage:', error);
+      }
+    }
   }
 
   // Get all books
@@ -160,6 +203,7 @@ export class BookService {
         };
 
         this.books.push(newBook);
+        this.saveBooksToStorage(); // Persist to localStorage
         this.booksSubject.next(this.books);
         return newBook;
       })
@@ -186,6 +230,7 @@ export class BookService {
             ...updates,
             updatedDate: new Date()
           };
+          this.saveBooksToStorage(); // Persist to localStorage
           this.booksSubject.next(this.books);
           return this.books[bookIndex];
         }
@@ -204,6 +249,7 @@ export class BookService {
           // Soft delete - just mark as inactive
           this.books[bookIndex].isActive = false;
           this.books[bookIndex].updatedDate = new Date();
+          this.saveBooksToStorage(); // Persist to localStorage
           this.booksSubject.next(this.books);
           return true;
         }
@@ -223,6 +269,7 @@ export class BookService {
           if (newAvailableCopies >= 0 && newAvailableCopies <= book.totalCopies) {
             book.availableCopies = newAvailableCopies;
             book.updatedDate = new Date();
+            this.saveBooksToStorage(); // Persist to localStorage
             this.booksSubject.next(this.books);
             return true;
           }

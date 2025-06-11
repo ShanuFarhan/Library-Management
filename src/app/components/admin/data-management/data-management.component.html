@@ -1,0 +1,92 @@
+<div class="data-management-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Data Management</mat-card-title>
+      <mat-card-subtitle>Manage application data persistence</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Storage Information -->
+      <div class="storage-info-section">
+        <h3>Storage Information</h3>
+        <div class="storage-grid">
+          <div *ngFor="let item of storageInfo | keyvalue" class="storage-item">
+            <mat-card class="storage-card">
+              <mat-card-content>
+                <h4>{{ item.key }}</h4>
+                <p><strong>Status:</strong> {{ item.value.exists ? 'Stored' : 'Not Found' }}</p>
+                <p><strong>Items:</strong> {{ item.value.itemCount }}</p>
+                <p><strong>Size:</strong> {{ item.value.size }} characters</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="loadStorageInfo()">
+          <mat-icon>refresh</mat-icon>
+          Refresh Info
+        </button>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Data Operations -->
+      <div class="data-operations-section">
+        <h3>Data Operations</h3>
+        
+        <div class="operation-buttons">
+          <button mat-raised-button color="warn" (click)="clearAllData()">
+            <mat-icon>delete_forever</mat-icon>
+            Clear All Data
+          </button>
+
+          <button mat-raised-button color="accent" (click)="resetToDefaults()">
+            <mat-icon>restore</mat-icon>
+            Reset to Defaults
+          </button>
+
+          <button mat-raised-button color="primary" (click)="exportData()">
+            <mat-icon>download</mat-icon>
+            Export Data
+          </button>
+
+          <div class="import-section">
+            <input
+              type="file"
+              accept=".json"
+              (change)="onFileSelected($event)"
+              #fileInput
+              style="display: none;">
+            <button mat-raised-button color="primary" (click)="fileInput.click()">
+              <mat-icon>upload</mat-icon>
+              Import Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Information -->
+      <div class="info-section">
+        <h3>Information</h3>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListIcon>info</mat-icon>
+            <div matLine>Data is automatically saved to browser's localStorage</div>
+            <div matLine>Data persists across browser sessions and page refreshes</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>warning</mat-icon>
+            <div matLine>Clearing browser data will remove all stored information</div>
+            <div matLine>Export data regularly for backup purposes</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>security</mat-icon>
+            <div matLine>Data is stored locally in your browser only</div>
+            <div matLine>No data is sent to external servers</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

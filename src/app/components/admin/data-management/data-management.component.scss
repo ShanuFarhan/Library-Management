@@ -1,0 +1,111 @@
+.data-management-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.storage-info-section {
+  margin-bottom: 30px;
+
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.storage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.storage-card {
+  height: 100%;
+  
+  h4 {
+    margin: 0 0 10px 0;
+    color: #1976d2;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 5px 0;
+    font-size: 13px;
+    
+    strong {
+      color: #666;
+    }
+  }
+}
+
+.data-operations-section {
+  margin: 30px 0;
+
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.operation-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+
+  button {
+    min-width: 150px;
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.import-section {
+  display: flex;
+  align-items: center;
+}
+
+.info-section {
+  margin-top: 30px;
+
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  mat-list-item {
+    margin-bottom: 10px;
+    
+    mat-icon {
+      color: #666;
+    }
+  }
+}
+
+mat-divider {
+  margin: 30px 0;
+}
+
+@media (max-width: 768px) {
+  .data-management-container {
+    padding: 10px;
+  }
+
+  .storage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .operation-buttons {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
+}
