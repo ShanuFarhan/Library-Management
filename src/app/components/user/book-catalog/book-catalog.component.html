@@ -1,0 +1,180 @@
+<!-- Header Toolbar -->
+<mat-toolbar color="primary" class="page-toolbar">
+    <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="toolbar-title">
+        <mat-icon>library_books</mat-icon>
+        Book Catalog
+    </span>
+    <span class="spacer"></span>
+    <span class="book-count">{{ totalBooks }} books found</span>
+    <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+        <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-raised-button color="accent" (click)="goToBorrowedBooks()">
+        <mat-icon>book</mat-icon>
+        My Books ({{ userBorrowedBooks.length }})
+    </button>
+</mat-toolbar>
+
+<div class="book-catalog-container">
+    <!-- Search and Filter Section -->
+    <mat-card class="search-card">
+        <mat-card-header>
+            <mat-card-title>Search & Filter Books</mat-card-title>
+            <mat-card-subtitle>Find your next great read</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="searchForm" class="search-form">
+                <div class="search-row">
+                    <mat-form-field class="search-field">
+                        <mat-label>Search by Title</mat-label>
+                        <input matInput formControlName="title" placeholder="Enter book title">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Search by Author</mat-label>
+                        <input matInput formControlName="author" placeholder="Enter author name">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Genre</mat-label>
+                        <mat-select formControlName="genre">
+                            <mat-option value="">All Genres</mat-option>
+                            <mat-option *ngFor="let genre of genres" [value]="genre">
+                                {{ genre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Availability</mat-label>
+                        <mat-select formControlName="availability">
+                            <mat-option value="all">All Books</mat-option>
+                            <mat-option value="available">Available</mat-option>
+                            <mat-option value="unavailable">Unavailable</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button mat-button type="button" (click)="clearSearch()" class="clear-button">
+                        <mat-icon>clear</mat-icon>
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- User Status Info -->
+    <mat-card class="status-card" *ngIf="currentUser">
+        <mat-card-content>
+            <div class="status-info">
+                <div class="status-item">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ currentUser.fullName }}</span>
+                </div>
+                <div class="status-item">
+                    <mat-icon>book</mat-icon>
+                    <span>{{ userBorrowedBooks.length }}/{{ currentUser.borrowLimit }} books borrowed</span>
+                </div>
+                <div class="status-item" [ngClass]="{'warning': userBorrowedBooks.length >= currentUser.borrowLimit}">
+                    <mat-icon>{{ userBorrowedBooks.length >= currentUser.borrowLimit ? 'warning' : 'check_circle'
+                        }}</mat-icon>
+                    <span>
+                        {{ userBorrowedBooks.length >= currentUser.borrowLimit ? 'Borrow limit reached' : 'Can borrow
+                        more books' }}
+                    </span>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Loading books...</p>
+    </div>
+
+    <!-- Books Grid -->
+    <div *ngIf="!isLoading" class="books-section">
+        <!-- No Books Message -->
+        <div *ngIf="paginatedBooks.length === 0" class="no-data">
+            <mat-icon>library_books</mat-icon>
+            <h3>No books found</h3>
+            <p>Try adjusting your search criteria or check back later for new additions.</p>
+            <button mat-raised-button color="primary" (click)="clearSearch()">
+                <mat-icon>clear</mat-icon>
+                Clear Filters
+            </button>
+        </div>
+
+        <!-- Books Grid -->
+        <div *ngIf="paginatedBooks.length > 0" class="books-grid">
+            <mat-card *ngFor="let book of paginatedBooks" class="book-card"
+                [ngClass]="{'unavailable': !canBorrowBook(book)}">
+                <mat-card-header>
+                    <mat-card-title class="book-title">{{ book.title }}</mat-card-title>
+                    <mat-card-subtitle class="book-author">by {{ book.author }}</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                    <div class="book-info">
+                        <div class="book-meta">
+                            <mat-chip-set>
+                                <mat-chip class="genre-chip">{{ book.genre }}</mat-chip>
+                                <mat-chip class="availability-chip"
+                                    [ngClass]="{'available': book.availableCopies > 0, 'unavailable': book.availableCopies === 0}">
+                                    {{ book.availableCopies > 0 ? 'Available' : 'Unavailable' }}
+                                </mat-chip>
+                            </mat-chip-set>
+                        </div>
+
+                        <div class="book-details">
+                            <p class="book-description">{{ book.description | slice:0:120 }}...</p>
+
+                            <div class="book-stats">
+                                <div class="stat-item">
+                                    <mat-icon>library_books</mat-icon>
+                                    <span>{{ book.availableCopies }}/{{ book.totalCopies }} available</span>
+                                </div>
+                                <div class="stat-item">
+                                    <mat-icon>calendar_today</mat-icon>
+                                    <span>Published: {{ book.publishedDate | date:'yyyy' }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <mat-icon>tag</mat-icon>
+                                    <span>ISBN: {{ book.isbn }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-actions class="book-actions">
+                    <button mat-raised-button [color]="canBorrowBook(book) ? 'primary' : 'basic'"
+                        [disabled]="!canBorrowBook(book) || isBorrowing" (click)="borrowBook(book)"
+                        class="borrow-button">
+                        <mat-icon>{{ isBookBorrowed(book) ? 'check' : 'add' }}</mat-icon>
+                        {{ getBorrowButtonText(book) }}
+                    </button>
+
+                    <button mat-icon-button matTooltip="Book Details" class="details-button">
+                        <mat-icon>info</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+        <!-- Pagination -->
+        <mat-card *ngIf="paginatedBooks.length > 0" class="pagination-card">
+            <mat-card-content>
+                <mat-paginator [length]="totalBooks" [pageSize]="pageSize" [pageIndex]="pageIndex"
+                    [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" showFirstLastButtons>
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

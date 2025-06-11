@@ -1,0 +1,297 @@
+<!-- Navigation Toolbar -->
+<mat-toolbar color="primary" class="dashboard-toolbar">
+    <span class="toolbar-title">
+        <mat-icon>dashboard</mat-icon>
+        Library Management System
+    </span>
+
+    <span class="spacer"></span>
+
+    <span class="user-info">
+        Welcome, {{ currentUser?.fullName }}
+        <span class="user-role">({{ isAdmin ? 'Admin' : 'User' }})</span>
+    </span>
+
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+        </button>
+    </mat-menu>
+</mat-toolbar>
+
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard...</p>
+</div>
+
+<!-- Admin Dashboard -->
+<div *ngIf="!isLoading && isAdmin" class="dashboard-container admin-dashboard">
+    <div class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p>Manage your library system</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <mat-card class="stat-card books-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>library_books</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ adminStats?.totalBooks || 0 }}</h3>
+                        <p>Total Books</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card users-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>people</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ adminStats?.totalUsers || 0 }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card borrowed-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>book</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ adminStats?.totalBorrowedBooks || 0 }}</h3>
+                        <p>Borrowed Books</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card overdue-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>warning</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ adminStats?.overdueBooks || 0 }}</h3>
+                        <p>Overdue Books</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="navigateToBooks()">
+                <mat-icon>add</mat-icon>
+                Manage Books
+            </button>
+            <button mat-raised-button color="accent" (click)="navigateToUsers()">
+                <mat-icon>person_add</mat-icon>
+                Manage Users
+            </button>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="recent-section">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Recent Transactions</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="recentTransactions.length === 0" class="no-data">
+                    No recent transactions
+                </div>
+                <mat-table *ngIf="recentTransactions.length > 0" [dataSource]="recentTransactions"
+                    class="transactions-table">
+                    <ng-container matColumnDef="book">
+                        <mat-header-cell *matHeaderCellDef>Book</mat-header-cell>
+                        <mat-cell *matCellDef="let transaction">{{ transaction.bookId }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="borrowDate">
+                        <mat-header-cell *matHeaderCellDef>Borrow Date</mat-header-cell>
+                        <mat-cell *matCellDef="let transaction">{{ transaction.borrowDate | date:'short' }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dueDate">
+                        <mat-header-cell *matHeaderCellDef>Due Date</mat-header-cell>
+                        <mat-cell *matCellDef="let transaction">{{ transaction.dueDate | date:'short' }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                        <mat-cell *matCellDef="let transaction">
+                            <span class="status-badge" [ngClass]="transaction.status">
+                                {{ transaction.status | titlecase }}
+                            </span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="transactionColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: transactionColumns;"></mat-row>
+                </mat-table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<!-- User Dashboard -->
+<div *ngIf="!isLoading && !isAdmin" class="dashboard-container user-dashboard">
+    <div class="dashboard-header">
+        <h1>Welcome to Your Library</h1>
+        <p>Discover and manage your books</p>
+    </div>
+
+    <!-- User Stats Cards -->
+    <div class="user-stats-grid">
+        <mat-card class="user-stat-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>book</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ userStats.currentlyBorrowed }}</h3>
+                        <p>Currently Borrowed</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="user-stat-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>history</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ userStats.totalBorrowed }}</h3>
+                        <p>Total Borrowed</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="user-stat-card">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>available_for_pickup</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ userStats.remainingBorrowLimit }}</h3>
+                        <p>Remaining Limit</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="user-stat-card" [ngClass]="{'warning': userStats.overdue > 0}">
+            <mat-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <mat-icon>warning</mat-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ userStats.overdue }}</h3>
+                        <p>Overdue Books</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="navigateToBooks()">
+                <mat-icon>search</mat-icon>
+                Browse Books
+            </button>
+            <button mat-raised-button color="accent" (click)="navigateToBorrowed()">
+                <mat-icon>library_books</mat-icon>
+                My Borrowed Books
+            </button>
+        </div>
+    </div>
+
+    <!-- Currently Borrowed Books -->
+    <div class="borrowed-section" *ngIf="userBorrowedBooks.length > 0">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Currently Borrowed Books</mat-card-title>
+                <mat-card-subtitle>{{ userBorrowedBooks.length }} book(s) borrowed</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="borrowed-books-grid">
+                    <mat-card *ngFor="let transaction of userBorrowedBooks" class="book-card">
+                        <mat-card-content>
+                            <h4>Book ID: {{ transaction.bookId }}</h4>
+                            <p><strong>Borrowed:</strong> {{ transaction.borrowDate | date:'short' }}</p>
+                            <p><strong>Due:</strong> {{ transaction.dueDate | date:'short' }}</p>
+                            <span class="status-badge" [ngClass]="transaction.status">
+                                {{ transaction.status | titlecase }}
+                            </span>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Recently Added Books -->
+    <div class="recent-books-section">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Recently Added Books</mat-card-title>
+                <mat-card-subtitle>Discover new additions to our library</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngIf="recentlyAddedBooks.length === 0" class="no-data">
+                    No books available
+                </div>
+                <div *ngIf="recentlyAddedBooks.length > 0" class="books-grid">
+                    <mat-card *ngFor="let book of recentlyAddedBooks" class="book-card">
+                        <mat-card-content>
+                            <h4>{{ book.title }}</h4>
+                            <p><strong>Author:</strong> {{ book.author }}</p>
+                            <p><strong>Genre:</strong> {{ book.genre }}</p>
+                            <p><strong>Available:</strong> {{ book.availableCopies }}/{{ book.totalCopies }}</p>
+                            <div class="book-actions">
+                                <button mat-button color="primary" [disabled]="book.availableCopies === 0">
+                                    <mat-icon>add</mat-icon>
+                                    Borrow
+                                </button>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

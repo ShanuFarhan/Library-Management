@@ -1,0 +1,48 @@
+﻿<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Login to Library Management System</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Please enter a valid email
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width"
+          [disabled]="loginForm.invalid || isLoading">
+          {{isLoading ? 'Logging in...' : 'Login'}}
+        </button>
+      </form>
+
+      <div class="demo-credentials">
+        <h4>Demo Credentials:</h4>
+        <p><strong>Admin:</strong> admin&#64;library.com / password</p>
+        <p><strong>User:</strong> Register a new user account</p>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+    </mat-card-actions>
+  </mat-card>
+</div>

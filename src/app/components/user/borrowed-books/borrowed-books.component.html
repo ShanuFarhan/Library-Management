@@ -1,0 +1,244 @@
+<!-- Header Toolbar -->
+<mat-toolbar color="primary" class="page-toolbar">
+    <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="toolbar-title">
+        <mat-icon>book</mat-icon>
+        My Borrowed Books
+    </span>
+    <span class="spacer"></span>
+    <span class="book-count">{{ currentlyBorrowedBooks.length }} books borrowed</span>
+    <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+        <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-raised-button color="accent" (click)="goToCatalog()">
+        <mat-icon>library_books</mat-icon>
+        Browse Books
+    </button>
+</mat-toolbar>
+
+<div class="borrowed-books-container">
+    <!-- User Status Summary -->
+    <mat-card class="status-card" *ngIf="currentUser">
+        <mat-card-content>
+            <div class="status-summary">
+                <div class="status-item">
+                    <div class="status-icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <div class="status-info">
+                        <h3>{{ currentUser.fullName }}</h3>
+                        <p>Library Member</p>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <div class="status-icon">
+                        <mat-icon>book</mat-icon>
+                    </div>
+                    <div class="status-info">
+                        <h3>{{ currentlyBorrowedBooks.length }}/{{ currentUser.borrowLimit }}</h3>
+                        <p>Books Borrowed</p>
+                    </div>
+                </div>
+
+                <div class="status-item" [ngClass]="{'warning': getOverdueCount() > 0}">
+                    <div class="status-icon">
+                        <mat-icon>{{ getOverdueCount() > 0 ? 'warning' : 'check_circle' }}</mat-icon>
+                    </div>
+                    <div class="status-info">
+                        <h3>{{ getOverdueCount() }}</h3>
+                        <p>Overdue Books</p>
+                    </div>
+                </div>
+
+                <div class="status-item" [ngClass]="{'warning': getTotalFines() > 0}">
+                    <div class="status-icon">
+                        <mat-icon>{{ getTotalFines() > 0 ? 'attach_money' : 'money_off' }}</mat-icon>
+                    </div>
+                    <div class="status-info">
+                        <h3>${{ getTotalFines() }}</h3>
+                        <p>Total Fines</p>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Loading your books...</p>
+    </div>
+
+    <!-- Tabs for Current Books and History -->
+    <mat-card *ngIf="!isLoading" class="tabs-card">
+        <mat-tab-group>
+            <!-- Currently Borrowed Books Tab -->
+            <mat-tab label="Currently Borrowed ({{ currentlyBorrowedBooks.length }})">
+                <div class="tab-content">
+                    <!-- No Currently Borrowed Books -->
+                    <div *ngIf="currentlyBorrowedBooks.length === 0" class="no-data">
+                        <mat-icon>library_books</mat-icon>
+                        <h3>No books currently borrowed</h3>
+                        <p>You haven't borrowed any books yet. Browse our catalog to find your next great read!</p>
+                        <button mat-raised-button color="primary" (click)="goToCatalog()">
+                            <mat-icon>search</mat-icon>
+                            Browse Books
+                        </button>
+                    </div>
+
+                    <!-- Currently Borrowed Books Table -->
+                    <div *ngIf="currentlyBorrowedBooks.length > 0" class="table-container">
+                        <table mat-table [dataSource]="currentlyBorrowedBooks" class="borrowed-books-table">
+                            <!-- Book Column -->
+                            <ng-container matColumnDef="book">
+                                <th mat-header-cell *matHeaderCellDef>Book</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <div class="book-info">
+                                        <strong>{{ getBookTitle(transaction.bookId) }}</strong>
+                                        <small>ID: {{ transaction.bookId }}</small>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Borrow Date Column -->
+                            <ng-container matColumnDef="borrowDate">
+                                <th mat-header-cell *matHeaderCellDef>Borrowed</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    {{ transaction.borrowDate | date:'short' }}
+                                </td>
+                            </ng-container>
+
+                            <!-- Due Date Column -->
+                            <ng-container matColumnDef="dueDate">
+                                <th mat-header-cell *matHeaderCellDef>Due Date</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <div class="due-date" [ngClass]="{'overdue': isOverdue(transaction.dueDate)}">
+                                        {{ transaction.dueDate | date:'short' }}
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Days Left Column -->
+                            <ng-container matColumnDef="daysLeft">
+                                <th mat-header-cell *matHeaderCellDef>Days Left</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <div class="days-left" [ngClass]="{'overdue': isOverdue(transaction.dueDate)}">
+                                        {{ getDaysLeft(transaction.dueDate) }}
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Status Column -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <mat-chip class="status-chip" [ngClass]="getStatusClass(transaction)">
+                                        {{ getStatusText(transaction) }}
+                                    </mat-chip>
+                                </td>
+                            </ng-container>
+
+                            <!-- Actions Column -->
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <button mat-raised-button color="primary" (click)="returnBook(transaction)"
+                                        [disabled]="isReturning" class="return-button">
+                                        <mat-icon>keyboard_return</mat-icon>
+                                        Return Book
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="currentBooksColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: currentBooksColumns;"
+                                [ngClass]="{'overdue-row': isOverdue(row.dueDate)}"></tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!-- Transaction History Tab -->
+            <mat-tab label="History ({{ transactionHistory.length }})">
+                <div class="tab-content">
+                    <!-- No History -->
+                    <div *ngIf="transactionHistory.length === 0" class="no-data">
+                        <mat-icon>history</mat-icon>
+                        <h3>No transaction history</h3>
+                        <p>Your borrowing history will appear here once you start borrowing books.</p>
+                    </div>
+
+                    <!-- Transaction History Table -->
+                    <div *ngIf="transactionHistory.length > 0" class="table-container">
+                        <table mat-table [dataSource]="transactionHistory" class="history-table">
+                            <!-- Book Column -->
+                            <ng-container matColumnDef="book">
+                                <th mat-header-cell *matHeaderCellDef>Book</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <div class="book-info">
+                                        <strong>{{ getBookTitle(transaction.bookId) }}</strong>
+                                        <small>ID: {{ transaction.bookId }}</small>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Borrow Date Column -->
+                            <ng-container matColumnDef="borrowDate">
+                                <th mat-header-cell *matHeaderCellDef>Borrowed</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    {{ transaction.borrowDate | date:'short' }}
+                                </td>
+                            </ng-container>
+
+                            <!-- Due Date Column -->
+                            <ng-container matColumnDef="dueDate">
+                                <th mat-header-cell *matHeaderCellDef>Due Date</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    {{ transaction.dueDate | date:'short' }}
+                                </td>
+                            </ng-container>
+
+                            <!-- Return Date Column -->
+                            <ng-container matColumnDef="returnDate">
+                                <th mat-header-cell *matHeaderCellDef>Returned</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    {{ transaction.returnDate ? (transaction.returnDate | date:'short') : '-' }}
+                                </td>
+                            </ng-container>
+
+                            <!-- Status Column -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <mat-chip class="status-chip" [ngClass]="getStatusClass(transaction)">
+                                        {{ getStatusText(transaction) }}
+                                    </mat-chip>
+                                </td>
+                            </ng-container>
+
+                            <!-- Fine Column -->
+                            <ng-container matColumnDef="fine">
+                                <th mat-header-cell *matHeaderCellDef>Fine</th>
+                                <td mat-cell *matCellDef="let transaction">
+                                    <span *ngIf="transaction.fine && transaction.fine > 0" class="fine-amount">
+                                        ${{ transaction.fine }}
+                                    </span>
+                                    <span *ngIf="!transaction.fine || transaction.fine === 0" class="no-fine">
+                                        -
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="historyColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: historyColumns;" [ngClass]="getStatusClass(row)">
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</div>

@@ -1,0 +1,426 @@
+// Page Toolbar
+.page-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.book-count {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-right: 16px;
+}
+
+// Main Container
+.book-catalog-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Cards
+.search-card,
+.status-card,
+.pagination-card {
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Search Form
+.search-form {
+  .search-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    align-items: end;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .clear-button {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// Status Card
+.status-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  .status-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+
+    &.warning {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1px solid rgba(255, 193, 7, 0.5);
+    }
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Loading Container
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px;
+  gap: 16px;
+}
+
+// Books Section
+.books-section {
+  margin-bottom: 24px;
+}
+
+// Books Grid
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.book-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  &.unavailable {
+    opacity: 0.7;
+
+    .book-title {
+      color: #999;
+    }
+  }
+
+  .book-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .book-author {
+    color: #666;
+    font-style: italic;
+  }
+
+  .book-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .book-meta {
+    mat-chip-set {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .genre-chip {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .availability-chip {
+      &.available {
+        background-color: #e8f5e8;
+        color: #2e7d32;
+      }
+
+      &.unavailable {
+        background-color: #ffebee;
+        color: #c62828;
+      }
+    }
+  }
+
+  .book-description {
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .book-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      font-size: 0.9rem;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #999;
+      }
+    }
+  }
+
+  .book-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-top: 1px solid #eee;
+    margin-top: auto;
+
+    .borrow-button {
+      flex: 1;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Pagination Card
+.pagination-card {
+  .mat-mdc-card-content {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// No Data State
+.no-data {
+  text-align: center;
+  padding: 64px 24px;
+  color: #999;
+
+  mat-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #666;
+    font-weight: 400;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .book-catalog-container {
+    padding: 16px;
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-toolbar {
+    .toolbar-title {
+      font-size: 1rem;
+    }
+
+    .book-count {
+      display: none;
+    }
+
+    button[mat-raised-button] {
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .search-form .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .status-info {
+    flex-direction: column;
+    align-items: stretch;
+
+    .status-item {
+      justify-content: center;
+    }
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .book-card {
+    .book-stats {
+      .stat-item {
+        font-size: 0.8rem;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+
+    .book-actions {
+      flex-direction: column;
+      gap: 8px;
+
+      .borrow-button {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .book-catalog-container {
+    padding: 8px;
+  }
+
+  .search-card,
+  .status-card,
+  .pagination-card {
+    margin-bottom: 16px;
+  }
+
+  .book-card {
+    .book-title {
+      font-size: 1rem;
+    }
+
+    .book-description {
+      font-size: 0.9rem;
+    }
+
+    .book-meta mat-chip {
+      font-size: 0.7rem;
+    }
+  }
+
+  .no-data {
+    padding: 32px 16px;
+
+    mat-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Animation and Effects
+.book-card {
+  &:hover .book-title {
+    color: #1976d2;
+  }
+}
+
+.borrow-button {
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.02);
+  }
+}
+
+.search-card,
+.status-card,
+.pagination-card {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Loading state for borrow button
+.borrow-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,370 @@
+// Dashboard Toolbar
+.dashboard-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-info {
+  margin-right: 16px;
+  font-size: 0.9rem;
+}
+
+.user-role {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+}
+
+// Loading Container
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 16px;
+}
+
+// Dashboard Container
+.dashboard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+  text-align: center;
+
+  h1 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-weight: 300;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 1.1rem;
+  }
+}
+
+// Stats Grid (Admin)
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .stat-info {
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+
+  &.books-card .stat-icon {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.users-card .stat-icon {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+  }
+
+  &.borrowed-card .stat-icon {
+    background-color: #e8f5e8;
+    color: #388e3c;
+  }
+
+  &.overdue-card .stat-icon {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+}
+
+// User Stats Grid
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.user-stat-card {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &.warning {
+    border-left: 4px solid #f44336;
+  }
+
+  .stat-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #666;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .stat-info {
+    h3 {
+      margin: 0 0 2px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Quick Actions
+.quick-actions {
+  margin-bottom: 32px;
+
+  h2 {
+    margin: 0 0 16px 0;
+    color: #333;
+    font-weight: 400;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Recent Sections
+.recent-section,
+.borrowed-section,
+.recent-books-section {
+  margin-bottom: 32px;
+
+  mat-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+
+  mat-card-title {
+    color: #333;
+    font-weight: 500;
+  }
+
+  mat-card-subtitle {
+    color: #666;
+  }
+}
+
+// Tables
+.transactions-table {
+  width: 100%;
+
+  mat-header-cell {
+    font-weight: 600;
+    color: #333;
+  }
+
+  mat-cell {
+    color: #666;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    &.active {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+    }
+
+    &.returned {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+
+    &.overdue {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+}
+
+// Book Grids
+.borrowed-books-grid,
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.book-card {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  h4 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 4px 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .book-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}
+
+// No Data State
+.no-data {
+  text-align: center;
+  padding: 32px;
+  color: #999;
+  font-style: italic;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .user-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .action-buttons {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .borrowed-books-grid,
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar-title {
+    font-size: 1rem;
+  }
+
+  .user-info {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

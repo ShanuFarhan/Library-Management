@@ -1,0 +1,415 @@
+// Page Toolbar
+.page-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.book-count {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-right: 16px;
+}
+
+// Main Container
+.borrowed-books-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Status Card
+.status-card {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  .status-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &.warning {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1px solid rgba(255, 193, 7, 0.5);
+    }
+
+    .status-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .status-info {
+      h3 {
+        margin: 0 0 4px 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// Loading Container
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px;
+  gap: 16px;
+}
+
+// Tabs Card
+.tabs-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .tab-content {
+    padding: 24px;
+  }
+}
+
+// Tables
+.table-container {
+  overflow-x: auto;
+}
+
+.borrowed-books-table,
+.history-table {
+  width: 100%;
+  min-width: 700px;
+
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    color: #333;
+    background-color: #f5f5f5;
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 8px;
+  }
+
+  .mat-mdc-row {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
+
+    &.overdue-row {
+      background-color: #ffebee;
+    }
+  }
+
+  // Book Info
+  .book-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      color: #333;
+      font-weight: 500;
+    }
+
+    small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+  }
+
+  // Due Date
+  .due-date {
+    font-weight: 500;
+
+    &.overdue {
+      color: #d32f2f;
+      font-weight: 600;
+    }
+  }
+
+  // Days Left
+  .days-left {
+    font-weight: 600;
+    color: #2e7d32;
+
+    &.overdue {
+      color: #d32f2f;
+    }
+  }
+
+  // Status Chips
+  .status-chip {
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    &.active {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+    }
+
+    &.returned {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+
+    &.overdue {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+
+  // Return Button
+  .return-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  // Fine Amount
+  .fine-amount {
+    color: #d32f2f;
+    font-weight: 600;
+  }
+
+  .no-fine {
+    color: #999;
+  }
+}
+
+// No Data State
+.no-data {
+  text-align: center;
+  padding: 64px 24px;
+  color: #999;
+
+  mat-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #666;
+    font-weight: 400;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .borrowed-books-container {
+    padding: 16px;
+  }
+
+  .status-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-toolbar {
+    .toolbar-title {
+      font-size: 1rem;
+    }
+
+    .book-count {
+      display: none;
+    }
+
+    button[mat-raised-button] {
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .status-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .status-item {
+    .status-info {
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .borrowed-books-table,
+  .history-table {
+    min-width: 600px;
+    font-size: 0.9rem;
+
+    .mat-mdc-cell {
+      padding: 8px 4px;
+    }
+
+    .book-info small {
+      display: none;
+    }
+
+    .return-button {
+      font-size: 0.8rem;
+      padding: 8px 12px;
+    }
+  }
+
+  .tab-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .borrowed-books-container {
+    padding: 8px;
+  }
+
+  .status-card {
+    margin-bottom: 16px;
+  }
+
+  .status-item {
+    padding: 12px;
+
+    .status-icon {
+      width: 40px;
+      height: 40px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .status-info {
+      h3 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .borrowed-books-table,
+  .history-table {
+    min-width: 500px;
+    font-size: 0.8rem;
+  }
+
+  .no-data {
+    padding: 32px 16px;
+
+    mat-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Animation and Effects
+.status-card {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.tabs-card {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.return-button {
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.02);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

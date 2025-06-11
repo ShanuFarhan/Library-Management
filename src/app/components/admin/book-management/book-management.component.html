@@ -1,0 +1,263 @@
+<!-- Header Toolbar -->
+<mat-toolbar color="primary" class="page-toolbar">
+    <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="toolbar-title">
+        <mat-icon>library_books</mat-icon>
+        Book Management
+    </span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="showAddForm()" [disabled]="isLoading">
+        <mat-icon>add</mat-icon>
+        Add New Book
+    </button>
+</mat-toolbar>
+
+<div class="book-management-container">
+    <!-- Search and Filter Section -->
+    <mat-card class="search-card">
+        <mat-card-header>
+            <mat-card-title>Search & Filter Books</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="searchForm" class="search-form">
+                <div class="search-row">
+                    <mat-form-field class="search-field">
+                        <mat-label>Search by Title</mat-label>
+                        <input matInput formControlName="title" placeholder="Enter book title">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Search by Author</mat-label>
+                        <input matInput formControlName="author" placeholder="Enter author name">
+                        <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Genre</mat-label>
+                        <mat-select formControlName="genre">
+                            <mat-option value="">All Genres</mat-option>
+                            <mat-option *ngFor="let genre of genres" [value]="genre">
+                                {{ genre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="search-field">
+                        <mat-label>Status</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option value="all">All Books</mat-option>
+                            <mat-option value="active">Active</mat-option>
+                            <mat-option value="inactive">Inactive</mat-option>
+                            <mat-option value="available">Available</mat-option>
+                            <mat-option value="unavailable">Unavailable</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button mat-button type="button" (click)="clearSearch()" class="clear-button">
+                        <mat-icon>clear</mat-icon>
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Add/Edit Book Form -->
+    <mat-card *ngIf="isAddingBook" class="form-card">
+        <mat-card-header>
+            <mat-card-title>
+                {{ editingBook ? 'Edit Book' : 'Add New Book' }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="book-form">
+                <div class="form-row">
+                    <mat-form-field class="form-field">
+                        <mat-label>Title</mat-label>
+                        <input matInput formControlName="title" required>
+                        <mat-error>{{ getErrorMessage('title') }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-field">
+                        <mat-label>Author</mat-label>
+                        <input matInput formControlName="author" required>
+                        <mat-error>{{ getErrorMessage('author') }}</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                    <mat-form-field class="form-field">
+                        <mat-label>ISBN</mat-label>
+                        <input matInput formControlName="isbn" required>
+                        <mat-error>{{ getErrorMessage('isbn') }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-field">
+                        <mat-label>Genre</mat-label>
+                        <mat-select formControlName="genre" required>
+                            <mat-option *ngFor="let genre of genres" [value]="genre">
+                                {{ genre }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>{{ getErrorMessage('genre') }}</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                    <mat-form-field class="form-field">
+                        <mat-label>Total Copies</mat-label>
+                        <input matInput type="number" formControlName="totalCopies" required min="1" max="100">
+                        <mat-error>{{ getErrorMessage('totalCopies') }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-field">
+                        <mat-label>Published Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="publishedDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error>{{ getErrorMessage('publishedDate') }}</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" rows="3" required></textarea>
+                    <mat-error>{{ getErrorMessage('description') }}</mat-error>
+                </mat-form-field>
+
+                <div class="form-actions">
+                    <button mat-button type="button" (click)="hideAddForm()" [disabled]="isLoading">
+                        Cancel
+                    </button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading || bookForm.invalid">
+                        <mat-icon>{{ editingBook ? 'save' : 'add' }}</mat-icon>
+                        {{ editingBook ? 'Update Book' : 'Add Book' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Books Table -->
+    <mat-card class="table-card">
+        <mat-card-header>
+            <mat-card-title>
+                Books Library ({{ filteredBooks.length }} books)
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <!-- Loading Spinner -->
+            <div *ngIf="isLoading" class="loading-container">
+                <mat-spinner></mat-spinner>
+                <p>Loading books...</p>
+            </div>
+
+            <!-- Books Table -->
+            <div *ngIf="!isLoading" class="table-container">
+                <table mat-table [dataSource]="filteredBooks" class="books-table">
+                    <!-- Title Column -->
+                    <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef>Title</th>
+                        <td mat-cell *matCellDef="let book">
+                            <div class="book-title">
+                                <strong>{{ book.title }}</strong>
+                                <small class="book-description">{{ book.description | slice:0:100 }}...</small>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Author Column -->
+                    <ng-container matColumnDef="author">
+                        <th mat-header-cell *matHeaderCellDef>Author</th>
+                        <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+                    </ng-container>
+
+                    <!-- Genre Column -->
+                    <ng-container matColumnDef="genre">
+                        <th mat-header-cell *matHeaderCellDef>Genre</th>
+                        <td mat-cell *matCellDef="let book">
+                            <span class="genre-badge">{{ book.genre }}</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- ISBN Column -->
+                    <ng-container matColumnDef="isbn">
+                        <th mat-header-cell *matHeaderCellDef>ISBN</th>
+                        <td mat-cell *matCellDef="let book">
+                            <code class="isbn">{{ book.isbn }}</code>
+                        </td>
+                    </ng-container>
+
+                    <!-- Total Copies Column -->
+                    <ng-container matColumnDef="totalCopies">
+                        <th mat-header-cell *matHeaderCellDef>Total</th>
+                        <td mat-cell *matCellDef="let book">{{ book.totalCopies }}</td>
+                    </ng-container>
+
+                    <!-- Available Copies Column -->
+                    <ng-container matColumnDef="availableCopies">
+                        <th mat-header-cell *matHeaderCellDef>Available</th>
+                        <td mat-cell *matCellDef="let book">
+                            <span class="availability" [ngClass]="{
+                'available': book.availableCopies > 0,
+                'unavailable': book.availableCopies === 0
+              }">
+                                {{ book.availableCopies }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Status</th>
+                        <td mat-cell *matCellDef="let book">
+                            <span class="status-badge" [ngClass]="{
+                'active': book.isActive,
+                'inactive': !book.isActive
+              }">
+                                {{ book.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let book">
+                            <div class="action-buttons">
+                                <button mat-icon-button color="primary" (click)="editBook(book)" [disabled]="isLoading"
+                                    matTooltip="Edit Book">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+
+                                <button mat-icon-button [color]="book.isActive ? 'warn' : 'accent'"
+                                    (click)="toggleBookStatus(book)" [disabled]="isLoading"
+                                    [matTooltip]="book.isActive ? 'Deactivate Book' : 'Activate Book'">
+                                    <mat-icon>{{ book.isActive ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                </button>
+
+                                <button mat-icon-button color="warn" (click)="deleteBook(book)" [disabled]="isLoading"
+                                    matTooltip="Delete Book">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <!-- No Data Message -->
+                <div *ngIf="filteredBooks.length === 0" class="no-data">
+                    <mat-icon>library_books</mat-icon>
+                    <h3>No books found</h3>
+                    <p>Try adjusting your search criteria or add a new book.</p>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

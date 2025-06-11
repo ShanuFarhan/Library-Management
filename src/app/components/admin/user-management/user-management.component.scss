@@ -1,0 +1,437 @@
+// Page Toolbar
+.page-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-count {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+// Main Container
+.user-management-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Content Layout
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: start;
+}
+
+// Cards
+.search-card,
+.table-card,
+.details-card {
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details-card {
+  width: 400px;
+  margin-bottom: 0;
+  position: sticky;
+  top: 100px;
+}
+
+// Search Form
+.search-form {
+  .search-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    align-items: end;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .clear-button {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// Loading Container
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 16px;
+}
+
+// Table Container
+.table-container {
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 700px;
+
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    color: #333;
+    background-color: #f5f5f5;
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 8px;
+  }
+
+  .mat-mdc-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
+
+    &.selected-row {
+      background-color: #e3f2fd;
+    }
+  }
+
+  // User Info Column
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      color: #333;
+      font-weight: 500;
+    }
+
+    small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+  }
+
+  // Role Badge
+  .role-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    &.admin {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    &.user {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+  }
+
+  // Borrowed Count
+  .borrowed-count {
+    font-weight: 600;
+    color: #1976d2;
+  }
+
+  // Status Badge
+  .status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    &.active {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+    }
+
+    &.inactive {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+
+  // Action Buttons
+  .action-buttons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    button {
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+    }
+  }
+}
+
+// Details Card
+.details-card {
+  .mat-mdc-card-header {
+    position: relative;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
+  .tab-content {
+    padding: 16px 0;
+  }
+
+  // Edit Form
+  .edit-form {
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-field {
+      width: 100%;
+    }
+
+    .user-stats {
+      margin: 24px 0;
+      padding: 16px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .stat-label {
+          font-weight: 500;
+          color: #666;
+        }
+
+        .stat-value {
+          color: #333;
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+  }
+
+  // Transactions Table
+  .transactions-container {
+    margin-top: 16px;
+  }
+
+  .transactions-table {
+    width: 100%;
+
+    .mat-mdc-header-cell {
+      font-weight: 600;
+      color: #333;
+      background-color: #f5f5f5;
+    }
+
+    .mat-mdc-cell {
+      padding: 8px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+
+      &.active {
+        background-color: #e8f5e8;
+        color: #2e7d32;
+      }
+
+      &.returned {
+        background-color: #e3f2fd;
+        color: #1565c0;
+      }
+
+      &.overdue {
+        background-color: #ffebee;
+        color: #c62828;
+      }
+    }
+
+    .fine-amount {
+      color: #d32f2f;
+      font-weight: 600;
+    }
+  }
+}
+
+// No Data State
+.no-data {
+  text-align: center;
+  padding: 48px 24px;
+  color: #999;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #666;
+    font-weight: 400;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .user-management-container {
+    padding: 16px;
+  }
+
+  .content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .details-card {
+    width: 100%;
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-toolbar {
+    .toolbar-title {
+      font-size: 1rem;
+    }
+
+    .user-count {
+      display: none;
+    }
+  }
+
+  .search-form .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .users-table {
+    min-width: 600px;
+    font-size: 0.9rem;
+
+    .mat-mdc-cell {
+      padding: 8px 4px;
+    }
+
+    .user-info small {
+      display: none;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      gap: 2px;
+
+      button {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+
+  .edit-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-management-container {
+    padding: 8px;
+  }
+
+  .search-card,
+  .table-card,
+  .details-card {
+    margin-bottom: 16px;
+  }
+
+  .users-table {
+    min-width: 500px;
+    font-size: 0.8rem;
+  }
+
+  .details-card .tab-content {
+    padding: 8px 0;
+  }
+}
+
+// Animation
+.search-card,
+.table-card,
+.details-card {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.action-buttons button {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
