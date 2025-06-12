@@ -12,7 +12,6 @@
 </mat-toolbar>
 
 <div class="user-management-container">
-    <!-- Search and Filter Section -->
     <mat-card class="search-card">
         <mat-card-header>
             <mat-card-title>Search & Filter Users</mat-card-title>
@@ -60,22 +59,17 @@
     </mat-card>
 
     <div class="content-layout">
-        <!-- Users Table -->
         <mat-card class="table-card">
             <mat-card-header>
                 <mat-card-title>Users List</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <!-- Loading Spinner -->
                 <div *ngIf="isLoading" class="loading-container">
                     <mat-spinner></mat-spinner>
                     <p>Loading users...</p>
                 </div>
-
-                <!-- Users Table -->
                 <div *ngIf="!isLoading" class="table-container">
                     <table mat-table [dataSource]="filteredUsers" class="users-table">
-                        <!-- Name Column -->
                         <ng-container matColumnDef="fullName">
                             <th mat-header-cell *matHeaderCellDef>Name</th>
                             <td mat-cell *matCellDef="let user">
@@ -85,14 +79,10 @@
                                 </div>
                             </td>
                         </ng-container>
-
-                        <!-- Email Column -->
                         <ng-container matColumnDef="email">
                             <th mat-header-cell *matHeaderCellDef>Email</th>
                             <td mat-cell *matCellDef="let user">{{ user.email }}</td>
                         </ng-container>
-
-                        <!-- Role Column -->
                         <ng-container matColumnDef="role">
                             <th mat-header-cell *matHeaderCellDef>Role</th>
                             <td mat-cell *matCellDef="let user">
@@ -101,8 +91,6 @@
                                 </span>
                             </td>
                         </ng-container>
-
-                        <!-- Borrowed Books Column -->
                         <ng-container matColumnDef="borrowedBooks">
                             <th mat-header-cell *matHeaderCellDef>Borrowed</th>
                             <td mat-cell *matCellDef="let user">
@@ -111,14 +99,10 @@
                                 </span>
                             </td>
                         </ng-container>
-
-                        <!-- Borrow Limit Column -->
                         <ng-container matColumnDef="borrowLimit">
                             <th mat-header-cell *matHeaderCellDef>Limit</th>
                             <td mat-cell *matCellDef="let user">{{ user.borrowLimit }}</td>
                         </ng-container>
-
-                        <!-- Status Column -->
                         <ng-container matColumnDef="status">
                             <th mat-header-cell *matHeaderCellDef>Status</th>
                             <td mat-cell *matCellDef="let user">
@@ -130,8 +114,6 @@
                                 </span>
                             </td>
                         </ng-container>
-
-                        <!-- Actions Column -->
                         <ng-container matColumnDef="actions">
                             <th mat-header-cell *matHeaderCellDef>Actions</th>
                             <td mat-cell *matCellDef="let user">
@@ -154,8 +136,6 @@
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
                             [class.selected-row]="selectedUser?.id === row.id" (click)="selectUser(row)"></tr>
                     </table>
-
-                    <!-- No Data Message -->
                     <div *ngIf="filteredUsers.length === 0" class="no-data">
                         <mat-icon>people</mat-icon>
                         <h3>No users found</h3>
@@ -164,8 +144,6 @@
                 </div>
             </mat-card-content>
         </mat-card>
-
-        <!-- User Details Panel -->
         <mat-card *ngIf="selectedUser" class="details-card">
             <mat-card-header>
                 <mat-card-title>User Details</mat-card-title>
@@ -176,7 +154,6 @@
             </mat-card-header>
             <mat-card-content>
                 <mat-tab-group>
-                    <!-- User Information Tab -->
                     <mat-tab label="User Information">
                         <div class="tab-content">
                             <form [formGroup]="editUserForm" class="edit-form">

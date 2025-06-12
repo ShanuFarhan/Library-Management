@@ -1,4 +1,3 @@
-<!-- Navigation Toolbar -->
 <mat-toolbar color="primary" class="dashboard-toolbar">
     <span class="toolbar-title">
         <mat-icon>dashboard</mat-icon>
@@ -41,7 +40,6 @@
         <p>Manage your library system</p>
     </div>
 
-    <!-- Stats Cards -->
     <div class="stats-grid">
         <mat-card class="stat-card books-card">
             <mat-card-content>
@@ -99,8 +97,6 @@
             </mat-card-content>
         </mat-card>
     </div>
-
-    <!-- Quick Actions -->
     <div class="quick-actions">
         <h2>Quick Actions</h2>
         <div class="action-buttons">
@@ -119,7 +115,6 @@
         </div>
     </div>
 
-    <!-- Recent Transactions -->
     <div class="recent-section">
         <mat-card>
             <mat-card-header>
@@ -162,15 +157,11 @@
         </mat-card>
     </div>
 </div>
-
-<!-- User Dashboard -->
 <div *ngIf="!isLoading && !isAdmin" class="dashboard-container user-dashboard">
     <div class="dashboard-header">
         <h1>Welcome to Your Library</h1>
         <p>Discover and manage your books</p>
     </div>
-
-    <!-- User Stats Cards -->
     <div class="user-stats-grid">
         <mat-card class="user-stat-card">
             <mat-card-content>
@@ -228,8 +219,6 @@
             </mat-card-content>
         </mat-card>
     </div>
-
-    <!-- Quick Actions -->
     <div class="quick-actions">
         <h2>Quick Actions</h2>
         <div class="action-buttons">
@@ -243,8 +232,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Currently Borrowed Books -->
     <div class="borrowed-section" *ngIf="userBorrowedBooks.length > 0">
         <mat-card>
             <mat-card-header>
@@ -267,8 +254,6 @@
             </mat-card-content>
         </mat-card>
     </div>
-
-    <!-- Recently Added Books -->
     <div class="recent-books-section">
         <mat-card>
             <mat-card-header>

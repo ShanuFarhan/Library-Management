@@ -55,15 +55,9 @@ export class BookManagementComponent implements OnInit, OnDestroy {
   isLoading = false;
   isAddingBook = false;
   editingBook: Book | null = null;
-
-  // Forms
   bookForm: FormGroup;
   searchForm: FormGroup;
-
-  // Table configuration
   displayedColumns = ['title', 'author', 'genre', 'isbn', 'totalCopies', 'availableCopies', 'status', 'actions'];
-
-  // Genre options
   genres = Object.values(BookGenre);
 
   constructor(

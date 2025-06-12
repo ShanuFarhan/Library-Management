@@ -55,12 +55,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   userBooks: Book[] = [];
   isLoading = false;
   isLoadingTransactions = false;
-
-  // Forms
   searchForm: FormGroup;
   editUserForm: FormGroup;
-
-  // Table configuration
   displayedColumns = ['fullName', 'email', 'role', 'borrowedBooks', 'borrowLimit', 'status', 'actions'];
   transactionColumns = ['bookTitle', 'borrowDate', 'dueDate', 'returnDate', 'status', 'fine'];
 

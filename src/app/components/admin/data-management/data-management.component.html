@@ -6,7 +6,6 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Storage Information -->
       <div class="storage-info-section">
         <h3>Storage Information</h3>
         <div class="storage-grid">
@@ -29,10 +28,9 @@
 
       <mat-divider></mat-divider>
 
-      <!-- Data Operations -->
       <div class="data-operations-section">
         <h3>Data Operations</h3>
-        
+
         <div class="operation-buttons">
           <button mat-raised-button color="warn" (click)="clearAllData()">
             <mat-icon>delete_forever</mat-icon>
@@ -50,12 +48,7 @@
           </button>
 
           <div class="import-section">
-            <input
-              type="file"
-              accept=".json"
-              (change)="onFileSelected($event)"
-              #fileInput
-              style="display: none;">
+            <input type="file" accept=".json" (change)="onFileSelected($event)" #fileInput style="display: none;">
             <button mat-raised-button color="primary" (click)="fileInput.click()">
               <mat-icon>upload</mat-icon>
               Import Data
@@ -65,8 +58,6 @@
       </div>
 
       <mat-divider></mat-divider>
-
-      <!-- Information -->
       <div class="info-section">
         <h3>Information</h3>
         <mat-list>

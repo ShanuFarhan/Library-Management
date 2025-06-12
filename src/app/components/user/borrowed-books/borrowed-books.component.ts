@@ -116,12 +116,10 @@ export class BorrowedBooksComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (response) => {
             if (response.success) {
-              // Remove from currently borrowed
               this.currentlyBorrowedBooks = this.currentlyBorrowedBooks.filter(
                 t => t.id !== transaction.id
               );
 
-              // Add to history with return date
               const returnedTransaction: Transaction = {
                 ...transaction,
                 status: 'returned' as any,

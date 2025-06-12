@@ -55,12 +55,8 @@ export class BookCatalogComponent implements OnInit, OnDestroy {
   userBorrowedBooks: Transaction[] = [];
   isLoading = false;
   isBorrowing = false;
-
-  // Search and Filter
   searchForm: FormGroup;
   genres = Object.values(BookGenre);
-
-  // Pagination
   pageSize = 12;
   pageIndex = 0;
   totalBooks = 0;
@@ -163,8 +159,6 @@ export class BookCatalogComponent implements OnInit, OnDestroy {
 
   borrowBook(book: Book): void {
     if (!this.currentUser || this.isBorrowing) return;
-
-    // Check if user has reached borrow limit
     const currentlyBorrowed = this.userBorrowedBooks.length;
     if (currentlyBorrowed >= this.currentUser.borrowLimit) {
       this.snackBar.open(
@@ -175,13 +169,10 @@ export class BookCatalogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if book is available
     if (book.availableCopies <= 0) {
       this.snackBar.open('This book is currently unavailable', 'Close', { duration: 3000 });
       return;
     }
-
-    // Check if user already borrowed this book
     const alreadyBorrowed = this.userBorrowedBooks.some(t => t.bookId === book.id);
     if (alreadyBorrowed) {
       this.snackBar.open('You have already borrowed this book', 'Close', { duration: 3000 });
@@ -199,7 +190,6 @@ export class BookCatalogComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success && response.transaction) {
-            // Update local data
             const bookIndex = this.books.findIndex(b => b.id === book.id);
             if (bookIndex !== -1) {
               this.books[bookIndex].availableCopies--;

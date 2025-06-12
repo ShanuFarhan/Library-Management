@@ -71,8 +71,6 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.isLoading = true;
       const formData = this.registerForm.value;
-
-      // Remove confirmPassword from the data sent to service
       const { confirmPassword, ...userData } = formData;
 
       this.authService.register(userData).subscribe({

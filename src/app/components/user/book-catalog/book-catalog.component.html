@@ -19,7 +19,6 @@
 </mat-toolbar>
 
 <div class="book-catalog-container">
-    <!-- Search and Filter Section -->
     <mat-card class="search-card">
         <mat-card-header>
             <mat-card-title>Search & Filter Books</mat-card-title>
@@ -67,8 +66,6 @@
             </form>
         </mat-card-content>
     </mat-card>
-
-    <!-- User Status Info -->
     <mat-card class="status-card" *ngIf="currentUser">
         <mat-card-content>
             <div class="status-info">
@@ -98,7 +95,6 @@
         <p>Loading books...</p>
     </div>
 
-    <!-- Books Grid -->
     <div *ngIf="!isLoading" class="books-section">
         <!-- No Books Message -->
         <div *ngIf="paginatedBooks.length === 0" class="no-data">
@@ -111,7 +107,6 @@
             </button>
         </div>
 
-        <!-- Books Grid -->
         <div *ngIf="paginatedBooks.length > 0" class="books-grid">
             <mat-card *ngFor="let book of paginatedBooks" class="book-card"
                 [ngClass]="{'unavailable': !canBorrowBook(book)}">
@@ -168,7 +163,6 @@
             </mat-card>
         </div>
 
-        <!-- Pagination -->
         <mat-card *ngIf="paginatedBooks.length > 0" class="pagination-card">
             <mat-card-content>
                 <mat-paginator [length]="totalBooks" [pageSize]="pageSize" [pageIndex]="pageIndex"
