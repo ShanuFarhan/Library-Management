@@ -1,6 +1,6 @@
 [build]
-  publish = "dist/library-management/browser"
-  command = "npm run build"
+  publish = "dist/library-management"
+  command = "ng build --configuration=static"
 
 [[redirects]]
   from = "/*"
@@ -9,6 +9,3 @@
 
 [build.environment]
   NODE_VERSION = "18"
-
-[[plugins]]
-  package = "@netlify/angular-runtime"
